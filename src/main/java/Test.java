@@ -22,6 +22,8 @@ public class Test {
         try {
             Connection connection = DriverManager.getConnection(dbUrl, info);
             // Connection connection = DriverManager.getConnection(dbUrl, username, password);
+            String name = connection.getMetaData().getDatabaseProductName();
+            System.out.println("getDatabaseProductName = " + name);
 
             // simple select
             Statement statement = connection.createStatement();
