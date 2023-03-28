@@ -11,7 +11,7 @@ public class Test {
             return;
         }
 
-        String dbUrl = "jdbc:arrow-flight://127.0.0.1:4100";
+        String dbUrl = "jdbc:arrow-flight://127.0.0.1:8900";
         String user= "root";
         String password = "";
 
