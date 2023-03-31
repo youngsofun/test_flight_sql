@@ -5,14 +5,13 @@ public class Test {
     public static void main(String[] args) {
         try {
             Class.forName("org.apache.arrow.driver.jdbc.ArrowFlightJdbcDriver");
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             System.out.println("ERROR: can't find driver " + e.getMessage());
             return;
         }
 
         String dbUrl = "jdbc:arrow-flight://127.0.0.1:8900";
-        String user= "root";
+        String user = "root";
         String password = "";
 
         Properties info = new Properties();
@@ -25,12 +24,23 @@ public class Test {
             String name = connection.getMetaData().getDatabaseProductName();
             System.out.println("getDatabaseProductName = " + name);
 
+            String[] types = new String[]{};
+            ResultSet resultSet = connection.getMetaData().getTables(null, null, "%", types);
+            System.out.println("getTables:");
+            while (resultSet.next()) {
+                String table_name = resultSet.getString("catalog_name")
+                        + "." + resultSet.getString("db_schema_name")
+                        + "." + resultSet.getString("table_name");
+                System.out.println(table_name);
+            }
+            resultSet.close();
+
             // simple select
             Statement statement = connection.createStatement();
             String sql = "select version()";
             System.out.println(sql);
-            ResultSet resultSet = statement.executeQuery(sql);
-            while(resultSet.next()) {
+            resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
                 System.out.println(resultSet.getString("version()"));
             }
             resultSet.close();
@@ -61,17 +71,15 @@ public class Test {
             sql = "select * from test1";
             resultSet = statement.executeQuery(sql);
             System.out.println(sql);
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 System.out.println(resultSet.getString(1));
                 System.out.println(resultSet.getString("a"));
             }
             resultSet.close();
             statement.close();
             connection.close();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            return;
         }
     }
 }
